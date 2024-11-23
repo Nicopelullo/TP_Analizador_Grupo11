@@ -23,14 +23,21 @@ int buscarOAgregarSimbolo(const char *nombre) {
     return numSimbolos++;
 }
 
-// Obtener el valor de un identificador.
-int obtenerValor(const char *nombre) {
+int asignarValor(const char *nombre, int valor) {
     int idx = buscarOAgregarSimbolo(nombre);
-    return tabla[idx].valor;
+    if (idx == -1) {
+        printf("Error: No se pudo asignar valor, el identificador '%s' no existe.\n", nombre);
+        return -1;  // Indicar error
+    }
+    tabla[idx].valor = valor;
+    return valor;
 }
 
-// Asignar un valor a un identificador.
-void asignarValor(const char *nombre, int valor) {
-    int idx = buscarOAgregarSimbolo(nombre);
-    tabla[idx].valor = valor;
+int obtenerValor(const char *nombre) {
+    int idx = buscarSimbolo(nombre);
+    if (idx == -1) {
+        printf("Error: El identificador '%s' no está definido.\n", nombre);
+        return -1;  // Valor de error
+    }
+    return tabla[idx].valor;
 }

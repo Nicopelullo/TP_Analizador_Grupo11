@@ -78,12 +78,20 @@ primaria:
 
 /* Función de manejo de errores */
 void yyerror(const char *msg) {
-    fprintf(stderr, "Error de sintaxis: %s\n", msg);
+    fprintf(stderr, "Error de sintaxis en la línea %d: %s\n", yylineno, msg);
+    if (yytext) {
+        fprintf(stderr, "Token inesperado: '%s' (en la posición %ld)\n", yytext, (long)yytext);
+    }
 }
+
 
 int main() {
     printf("Iniciando el análisis sintáctico...\n");
-    yyparse();  // Comienza el análisis
-    printf("Análisis sintáctico terminado.\n");
+    if (yyparse() == 0) {
+        printf("Análisis sintáctico completado con éxito.\n");
+    } else {
+        printf("Hubo errores en el análisis sintáctico.\n");
+    }
     return 0;
 }
+
