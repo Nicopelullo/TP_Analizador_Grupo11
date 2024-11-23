@@ -1,10 +1,17 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
     #include "utils.c"
-    void yyerror(const char *msg);
-    extern int yylex();
+    extern int yylineno;  // Variable para el número de línea
+    extern char *yytext;  // Variable para el texto del token
+    void yyerror(const char *msg);  // Función para manejar errores
+
+    // Declaración de las funciones de utilidad
+    extern int yylex();  // Declaración de la función de análisis léxico
 %}
+
+
 
 /* Definición de tipos semánticos */
 %union {
@@ -35,8 +42,6 @@ listaDeSentencias:
 
 sentencia:
     IDENTIFICADOR ASIGNACION expresion PUNTOYCOMA { 
-        printf("Asignando valor a %s\n", $1);  // $1 es el identificador
-        printf("Valor asignado: %d\n", $3);   // $3 es el valor de la expresión
         asignarValor($1, $3); 
     }
     | LEER PARENTESISIZQUIERDO listaDeIdentificadores PARENTESISDERECHO PUNTOYCOMA
@@ -55,15 +60,15 @@ listaDeExpresiones:
 
 expresion:
     primaria                    { 
-        printf("Valor de primaria: %d\n", $1);  // Imprime el valor de la expresión primaria
+        printf("Valor de primaria: %d\n", $1);
         $$ = $1;
     }
     | expresion SUMA primaria   { 
-        printf("Suma: %d + %d = %d\n", $1, $3, $1 + $3);  // Imprime el resultado de la suma
+        printf("Suma: %d + %d = %d\n", $1, $3, $1 + $3);
         $$ = $1 + $3;
     }
     | expresion RESTA primaria  { 
-        printf("Resta: %d - %d = %d\n", $1, $3, $1 - $3);  // Imprime el resultado de la resta
+        printf("Resta: %d - %d = %d\n", $1, $3, $1 - $3);
         $$ = $1 - $3;
     }
     ;
@@ -83,6 +88,7 @@ void yyerror(const char *msg) {
         fprintf(stderr, "Token inesperado: '%s' (en la posición %ld)\n", yytext, (long)yytext);
     }
 }
+
 
 
 int main() {

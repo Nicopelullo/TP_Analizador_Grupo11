@@ -26,18 +26,20 @@ int buscarOAgregarSimbolo(const char *nombre) {
 int asignarValor(const char *nombre, int valor) {
     int idx = buscarOAgregarSimbolo(nombre);
     if (idx == -1) {
-        printf("Error: No se pudo asignar valor, el identificador '%s' no existe.\n", nombre);
-        return -1;  // Indicar error
+        fprintf(stderr, "Error: No se pudo asignar valor, el identificador '%s' no existe.\n", nombre);
+        return -1;
     }
     tabla[idx].valor = valor;
+    printf("Valor asignado a '%s': %d\n", nombre, valor);
     return valor;
 }
 
 int obtenerValor(const char *nombre) {
-    int idx = buscarSimbolo(nombre);
+    int idx = buscarOAgregarSimbolo(nombre);
     if (idx == -1) {
-        printf("Error: El identificador '%s' no está definido.\n", nombre);
-        return -1;  // Valor de error
+        fprintf(stderr, "Error: El identificador '%s' no está definido.\n", nombre);
+        return -1;
     }
     return tabla[idx].valor;
 }
+

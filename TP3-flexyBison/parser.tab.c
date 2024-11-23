@@ -71,11 +71,16 @@
 
     #include <stdio.h>
     #include <stdlib.h>
+    #include <string.h>
     #include "utils.c"
-    void yyerror(const char *msg);
-    extern int yylex();
+    extern int yylineno;  // Variable para el número de línea
+    extern char *yytext;  // Variable para el texto del token
+    void yyerror(const char *msg);  // Función para manejar errores
 
-#line 79 "parser.tab.c"
+    // Declaración de las funciones de utilidad
+    extern int yylex();  // Declaración de la función de análisis léxico
+
+#line 84 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -514,8 +519,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    28,    28,    32,    33,    37,    42,    43,    47,    48,
-      52,    53,    57,    61,    65,    72,    73,    74
+       0,    35,    35,    39,    40,    44,    47,    48,    52,    53,
+      57,    58,    62,    66,    70,    77,    78,    79
 };
 #endif
 
@@ -1092,62 +1097,60 @@ yyreduce:
   switch (yyn)
     {
   case 5: /* sentencia: IDENTIFICADOR ASIGNACION expresion PUNTOYCOMA  */
-#line 37 "parser.y"
+#line 44 "parser.y"
                                                   { 
-        printf("Asignando valor a %s\n", (yyvsp[-3].str));  // $1 es el identificador
-        printf("Valor asignado: %d\n", (yyvsp[-1].num));   // $3 es el valor de la expresión
         asignarValor((yyvsp[-3].str), (yyvsp[-1].num)); 
     }
-#line 1102 "parser.tab.c"
+#line 1105 "parser.tab.c"
     break;
 
   case 12: /* expresion: primaria  */
-#line 57 "parser.y"
+#line 62 "parser.y"
                                 { 
-        printf("Valor de primaria: %d\n", (yyvsp[0].num));  // Imprime el valor de la expresión primaria
+        printf("Valor de primaria: %d\n", (yyvsp[0].num));
         (yyval.num) = (yyvsp[0].num);
     }
-#line 1111 "parser.tab.c"
+#line 1114 "parser.tab.c"
     break;
 
   case 13: /* expresion: expresion SUMA primaria  */
-#line 61 "parser.y"
+#line 66 "parser.y"
                                 { 
-        printf("Suma: %d + %d = %d\n", (yyvsp[-2].num), (yyvsp[0].num), (yyvsp[-2].num) + (yyvsp[0].num));  // Imprime el resultado de la suma
+        printf("Suma: %d + %d = %d\n", (yyvsp[-2].num), (yyvsp[0].num), (yyvsp[-2].num) + (yyvsp[0].num));
         (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num);
     }
-#line 1120 "parser.tab.c"
+#line 1123 "parser.tab.c"
     break;
 
   case 14: /* expresion: expresion RESTA primaria  */
-#line 65 "parser.y"
+#line 70 "parser.y"
                                 { 
-        printf("Resta: %d - %d = %d\n", (yyvsp[-2].num), (yyvsp[0].num), (yyvsp[-2].num) - (yyvsp[0].num));  // Imprime el resultado de la resta
+        printf("Resta: %d - %d = %d\n", (yyvsp[-2].num), (yyvsp[0].num), (yyvsp[-2].num) - (yyvsp[0].num));
         (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num);
     }
-#line 1129 "parser.tab.c"
+#line 1132 "parser.tab.c"
     break;
 
   case 15: /* primaria: CONSTANTE  */
-#line 72 "parser.y"
+#line 77 "parser.y"
                                   { (yyval.num) = (yyvsp[0].num); }
-#line 1135 "parser.tab.c"
+#line 1138 "parser.tab.c"
     break;
 
   case 16: /* primaria: IDENTIFICADOR  */
-#line 73 "parser.y"
+#line 78 "parser.y"
                                   { (yyval.num) = obtenerValor((yyvsp[0].str)); }
-#line 1141 "parser.tab.c"
+#line 1144 "parser.tab.c"
     break;
 
   case 17: /* primaria: PARENTESISIZQUIERDO expresion PARENTESISDERECHO  */
-#line 74 "parser.y"
+#line 79 "parser.y"
                                                       { (yyval.num) = (yyvsp[-1].num); }
-#line 1147 "parser.tab.c"
+#line 1150 "parser.tab.c"
     break;
 
 
-#line 1151 "parser.tab.c"
+#line 1154 "parser.tab.c"
 
       default: break;
     }
@@ -1340,17 +1343,26 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 77 "parser.y"
+#line 82 "parser.y"
 
 
 /* Función de manejo de errores */
 void yyerror(const char *msg) {
-    fprintf(stderr, "Error de sintaxis: %s\n", msg);
+    fprintf(stderr, "Error de sintaxis en la línea %d: %s\n", yylineno, msg);
+    if (yytext) {
+        fprintf(stderr, "Token inesperado: '%s' (en la posición %ld)\n", yytext, (long)yytext);
+    }
 }
+
+
 
 int main() {
     printf("Iniciando el análisis sintáctico...\n");
-    yyparse();  // Comienza el análisis
-    printf("Análisis sintáctico terminado.\n");
+    if (yyparse() == 0) {
+        printf("Análisis sintáctico completado con éxito.\n");
+    } else {
+        printf("Hubo errores en el análisis sintáctico.\n");
+    }
     return 0;
 }
+
