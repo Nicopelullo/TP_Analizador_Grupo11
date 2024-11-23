@@ -71,10 +71,11 @@
 
     #include <stdio.h>
     #include <stdlib.h>
+    #include "utils.c"
     void yyerror(const char *msg);
     extern int yylex();
 
-#line 78 "parser.tab.c"
+#line 79 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -513,8 +514,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    25,    25,    29,    30,    34,    35,    36,    40,    41,
-      45,    46,    50,    51,    52,    56,    57,    58
+       0,    28,    28,    32,    33,    37,    42,    43,    47,    48,
+      52,    53,    57,    61,    65,    72,    73,    74
 };
 #endif
 
@@ -570,7 +571,7 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     0,     0,     0,     0,     3,     1,     0,
-       0,     0,     2,     4,     8,     0,     0,    16,    15,     0,
+       0,     0,     2,     4,     8,     0,     0,    15,    16,     0,
       10,    12,     0,     0,     0,     0,     0,     0,     0,     0,
        5,     6,     9,    17,     7,    11,    13,    14
 };
@@ -1090,8 +1091,63 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 5: /* sentencia: IDENTIFICADOR ASIGNACION expresion PUNTOYCOMA  */
+#line 37 "parser.y"
+                                                  { 
+        printf("Asignando valor a %s\n", (yyvsp[-3].str));  // $1 es el identificador
+        printf("Valor asignado: %d\n", (yyvsp[-1].num));   // $3 es el valor de la expresión
+        asignarValor((yyvsp[-3].str), (yyvsp[-1].num)); 
+    }
+#line 1102 "parser.tab.c"
+    break;
 
-#line 1095 "parser.tab.c"
+  case 12: /* expresion: primaria  */
+#line 57 "parser.y"
+                                { 
+        printf("Valor de primaria: %d\n", (yyvsp[0].num));  // Imprime el valor de la expresión primaria
+        (yyval.num) = (yyvsp[0].num);
+    }
+#line 1111 "parser.tab.c"
+    break;
+
+  case 13: /* expresion: expresion SUMA primaria  */
+#line 61 "parser.y"
+                                { 
+        printf("Suma: %d + %d = %d\n", (yyvsp[-2].num), (yyvsp[0].num), (yyvsp[-2].num) + (yyvsp[0].num));  // Imprime el resultado de la suma
+        (yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num);
+    }
+#line 1120 "parser.tab.c"
+    break;
+
+  case 14: /* expresion: expresion RESTA primaria  */
+#line 65 "parser.y"
+                                { 
+        printf("Resta: %d - %d = %d\n", (yyvsp[-2].num), (yyvsp[0].num), (yyvsp[-2].num) - (yyvsp[0].num));  // Imprime el resultado de la resta
+        (yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num);
+    }
+#line 1129 "parser.tab.c"
+    break;
+
+  case 15: /* primaria: CONSTANTE  */
+#line 72 "parser.y"
+                                  { (yyval.num) = (yyvsp[0].num); }
+#line 1135 "parser.tab.c"
+    break;
+
+  case 16: /* primaria: IDENTIFICADOR  */
+#line 73 "parser.y"
+                                  { (yyval.num) = obtenerValor((yyvsp[0].str)); }
+#line 1141 "parser.tab.c"
+    break;
+
+  case 17: /* primaria: PARENTESISIZQUIERDO expresion PARENTESISDERECHO  */
+#line 74 "parser.y"
+                                                      { (yyval.num) = (yyvsp[-1].num); }
+#line 1147 "parser.tab.c"
+    break;
+
+
+#line 1151 "parser.tab.c"
 
       default: break;
     }
@@ -1284,7 +1340,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 61 "parser.y"
+#line 77 "parser.y"
 
 
 /* Función de manejo de errores */
@@ -1293,6 +1349,8 @@ void yyerror(const char *msg) {
 }
 
 int main() {
-    yyparse();
+    printf("Iniciando el análisis sintáctico...\n");
+    yyparse();  // Comienza el análisis
+    printf("Análisis sintáctico terminado.\n");
     return 0;
 }

@@ -1,6 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include "utils.c"
     void yyerror(const char *msg);
     extern int yylex();
 %}
@@ -18,6 +19,8 @@
 %token <num> CONSTANTE
 %token <str> IDENTIFICADOR
 
+%type <num> expresion primaria
+
 %%
 /* Reglas gramaticales con rutinas semánticas */
 
@@ -31,7 +34,11 @@ listaDeSentencias:
     ;
 
 sentencia:
-    IDENTIFICADOR ASIGNACION expresion PUNTOYCOMA
+    IDENTIFICADOR ASIGNACION expresion PUNTOYCOMA { 
+        printf("Asignando valor a %s\n", $1);  // $1 es el identificador
+        printf("Valor asignado: %d\n", $3);   // $3 es el valor de la expresión
+        asignarValor($1, $3); 
+    }
     | LEER PARENTESISIZQUIERDO listaDeIdentificadores PARENTESISDERECHO PUNTOYCOMA
     | ESCRIBIR PARENTESISIZQUIERDO listaDeExpresiones PARENTESISDERECHO PUNTOYCOMA
     ;
@@ -47,15 +54,24 @@ listaDeExpresiones:
     ;
 
 expresion:
-    primaria
-    | expresion SUMA primaria 
-    | expresion RESTA primaria
+    primaria                    { 
+        printf("Valor de primaria: %d\n", $1);  // Imprime el valor de la expresión primaria
+        $$ = $1;
+    }
+    | expresion SUMA primaria   { 
+        printf("Suma: %d + %d = %d\n", $1, $3, $1 + $3);  // Imprime el resultado de la suma
+        $$ = $1 + $3;
+    }
+    | expresion RESTA primaria  { 
+        printf("Resta: %d - %d = %d\n", $1, $3, $1 - $3);  // Imprime el resultado de la resta
+        $$ = $1 - $3;
+    }
     ;
 
 primaria:
-    IDENTIFICADOR
-    | CONSTANTE
-    | PARENTESISIZQUIERDO expresion PARENTESISDERECHO
+      CONSTANTE                   { $$ = $1; }
+    | IDENTIFICADOR               { $$ = obtenerValor($1); }
+    | PARENTESISIZQUIERDO expresion PARENTESISDERECHO { $$ = $2; }
     ;
 
 %%
@@ -66,6 +82,8 @@ void yyerror(const char *msg) {
 }
 
 int main() {
-    yyparse();
+    printf("Iniciando el análisis sintáctico...\n");
+    yyparse();  // Comienza el análisis
+    printf("Análisis sintáctico terminado.\n");
     return 0;
 }
