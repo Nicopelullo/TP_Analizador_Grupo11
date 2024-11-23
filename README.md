@@ -21,3 +21,7 @@ Grupo 11
 * Nombre: Christian Nahuel
 
 --------------------------------------------------
+* Usuario de GitHub: BalboRamiro
+* Legajo: 2099871
+* Apellido/s: Balbo
+* Nombre: Ramiro
