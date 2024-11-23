@@ -1,2 +1,23 @@
 # TP_Analizador_Grupo11
-TP analizador de materia Sintaxis y Semántica de los Lenguajes, Curso K2055, Grupo 11
+TP analizador
+
+# Sintaxis y Semantica de los Lenguajes
+
+## Curso
+K2055
+
+## Año de cursada
+2024
+
+## Número del equipo
+Grupo 11
+
+## Integrantes del equipo
+
+--------------------------------------------------
+* Usuario de GitHub: ChristianZelaya10
+* Legajo: 153029-8
+* Apellido/s: Zelaya Cañete
+* Nombre: Christian Nahuel
+
+--------------------------------------------------
