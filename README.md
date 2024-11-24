@@ -16,7 +16,7 @@ Grupo 11
 
 --------------------------------------------------
 * Usuario de GitHub: ChristianZelaya10
-* Legajo: 153029-8
+* Legajo: 1530290
 * Apellido/s: Zelaya Cañete
 * Nombre: Christian Nahuel
 
