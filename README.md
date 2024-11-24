@@ -25,3 +25,9 @@ Grupo 11
 * Legajo: 2099871
 * Apellido/s: Balbo
 * Nombre: Ramiro
+
+ --------------------------------------------------
+* Usuario de GitHub: Nicopelullo
+* Legajo: 1727801
+* Apellido/s: Pelullo
+* Nombre: Nicolas
